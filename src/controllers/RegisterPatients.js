@@ -1,16 +1,20 @@
-const express = require('express');
-const db = require('../Infra');
+const pool = require("../Infra");
 
-const RegisterPatients = async (req) => {
+const RegisterPatients = async (req, res) => {
   try {
     const { firstName, secondName, cpf, cep, email, cel, about } = req.body;
 
     if (!firstName || !secondName || !cpf || !cep) {
-      return { success: false, message: "Todos os campos obrigatórios devem ser preenchidos." };
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "Todos os campos obrigatórios devem ser preenchidos.",
+        });
     }
 
     if (!isValidCPF(cpf)) {
-      return { success: false, message: "CPF inválido." };
+      return res.status(400).json({ success: false, message: "CPF inválido." });
     }
 
     const insertPatientQuery = `
@@ -18,18 +22,33 @@ const RegisterPatients = async (req) => {
       VALUES (?, ?, ?, ?, ?, ?, ?)
     `;
 
-    await db.query(insertPatientQuery, [firstName, secondName, cpf, cep, email, cel, about]);
+    await pool.query(insertPatientQuery, [
+      firstName,
+      secondName,
+      cpf,
+      cep,
+      email,
+      cel,
+      about,
+    ]);
 
-    return { success: true, message: "Paciente registrado com sucesso." };
+    return res
+      .status(201)
+      .json({ success: true, message: "Paciente registrado com sucesso." });
   } catch (error) {
     console.error("Erro ao registrar paciente:", error);
-    return { success: false, message: "Ocorreu um erro ao processar sua solicitação." };
+    return res
+      .status(500)
+      .json({
+        success: false,
+        message: "Ocorreu um erro ao processar sua solicitação.",
+      });
   }
 };
 
 function isValidCPF(cpf) {
   // Remove caracteres não numéricos
-  cpf = cpf.replace(/\D/g, '');
+  cpf = cpf.replace(/\D/g, "");
 
   if (cpf.length !== 11) {
     return false;
@@ -53,14 +72,16 @@ function isValidCPF(cpf) {
   remainder = 11 - (sum % 11);
   let digit2 = remainder > 9 ? 0 : remainder;
 
-  if (parseInt(cpf.charAt(9)) !== digit1 || parseInt(cpf.charAt(10)) !== digit2) {
+  if (
+    parseInt(cpf.charAt(9)) !== digit1 ||
+    parseInt(cpf.charAt(10)) !== digit2
+  ) {
     return false;
   }
 
   return true;
 }
 
-
 module.exports = {
-  RegisterPatients
-}
+  RegisterPatients,
+};
