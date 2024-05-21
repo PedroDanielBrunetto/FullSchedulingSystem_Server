@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const router = require("./router.js");
-const pool = require("./Infra");
+const pool = require("./Infra/mysql.js");
 
 const app = express();
 

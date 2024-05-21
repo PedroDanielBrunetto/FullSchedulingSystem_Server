@@ -1,4 +1,4 @@
-const pool = require("../Infra");
+const pool = require("../../Infra/mysql.js");
 
 const LoginController = async (req, res) => {
   const { emailCpf, password } = req.body;
@@ -8,7 +8,7 @@ const LoginController = async (req, res) => {
             SELECT true FROM MainUser WHERE (email_user = ? OR cpf_user = ?) AND password_user = ? 
         `;
 
-    pool.query(query, [emailCpf, emailCpf, password], async (err, result) => {
+    await pool.query(query, [emailCpf, emailCpf, password], async (err, result) => {
       if (err) {
         res.status(400).json({ Message: error });
         return;

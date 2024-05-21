@@ -1,16 +1,14 @@
-const pool = require("../Infra");
+const pool = require("../../Infra/mysql.js");
 
 const RegisterPatients = async (req, res) => {
   try {
     const { firstName, secondName, cpf, cep, email, cel, about } = req.body;
 
     if (!firstName || !secondName || !cpf || !cep) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Todos os campos obrigatórios devem ser preenchidos.",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Todos os campos obrigatórios devem ser preenchidos.",
+      });
     }
 
     if (!isValidCPF(cpf)) {
@@ -37,12 +35,10 @@ const RegisterPatients = async (req, res) => {
       .json({ success: true, message: "Paciente registrado com sucesso." });
   } catch (error) {
     console.error("Erro ao registrar paciente:", error);
-    return res
-      .status(500)
-      .json({
-        success: false,
-        message: "Ocorreu um erro ao processar sua solicitação.",
-      });
+    return res.status(500).json({
+      success: false,
+      message: "Ocorreu um erro ao processar sua solicitação.",
+    });
   }
 };
 

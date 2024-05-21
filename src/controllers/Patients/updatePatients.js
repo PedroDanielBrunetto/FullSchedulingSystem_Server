@@ -1,4 +1,4 @@
-const pool = require("../Infra");
+const pool = require("../../Infra/mysql.js");
 
 const UpdatePatient = async (req, res) => {
   try {
@@ -10,7 +10,6 @@ const UpdatePatient = async (req, res) => {
       about_patient,
     } = req.body;
 
-    // Verifica se o CPF do paciente foi fornecido
     if (!cpf_patient) {
       return res.status(400).json({
         success: false,
@@ -47,7 +46,6 @@ const UpdatePatient = async (req, res) => {
       });
     }
 
-    // Monta a query de atualização
     const updateQuery = `
       UPDATE patient
       SET ${updateFields.join(", ")}
@@ -57,7 +55,6 @@ const UpdatePatient = async (req, res) => {
     // Adiciona o CPF do paciente aos valores da query
     updateValues.push(cpf_patient);
 
-    // Executa a query de atualização no banco de dados
     await pool.query(updateQuery, updateValues);
 
     return res.status(200).json({

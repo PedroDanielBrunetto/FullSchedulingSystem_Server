@@ -6,18 +6,27 @@ const router = express.Router();
 router.use(express.json());
 router.use(cors());
 
-const { LoginController } = require("./controllers/loginControllers.js");
-const { RegisterPatients } = require("./controllers/registerPatients.js");
-const { ListPatients } = require("./controllers/listPatients.js");
-const { UpdatePatient } = require("./controllers/updatePatients.js");
+//Access Controller
+const { LoginController } = require("./controllers/Access/loginControllers.js");
+router.post("/login-main-user", LoginController);
+
+//Patients
+const { RegisterPatients } = require("./controllers/Patients/RegisterPatients.js");
+router.post("/register-patient", RegisterPatients);
+const { ListPatients } = require("./controllers/Patients/listPatients.js");
+router.get("/list-patients", ListPatients);
+const { UpdatePatient } = require("./controllers/Patients/updatePatients.js");
+router.put("/update-patients", UpdatePatient);
+
+//Schedule
+const { RegisterAppointment } = require("./controllers/Schedule/RegisterAppointment.js")
+router.post("/register-appointment", RegisterAppointment);
+const { CancelAppointment } = require ("./controllers/Schedule/CancelAppointment.js")
+router.delete("/cancel-appointment", CancelAppointment);
 
 router.get("/", (req, res) => {
   res.status(200).send("Server up");
 });
 
-router.post("/login-main-user", LoginController);
-router.post("/register-patient", RegisterPatients);
-router.put("/update-patients", UpdatePatient);
-router.get("/list-patients", ListPatients);
 
 module.exports = router;
