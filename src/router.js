@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const cron = require("node-cron");
 
 const router = express.Router();
 
@@ -23,6 +24,19 @@ const { RegisterAppointment } = require("./controllers/Schedule/RegisterAppointm
 router.post("/register-appointment", RegisterAppointment);
 const { CancelAppointment } = require ("./controllers/Schedule/CancelAppointment.js")
 router.delete("/cancel-appointment", CancelAppointment);
+
+//SendMaster
+const { SendSms } = require("./controllers/SendMaster/SendSms.js");
+router.get("/Send-sms-Iagente", SendSms);
+//Rotina
+const { ListAndViewsInDay } = require("./controllers/SendMaster/ListAndViewsInDay.js")
+cron.schedule('0 6 * * *', () => {
+  console.log('Executando rotina de envio de SMS às 06:00 horário de Brasília');
+  ListAndViewsInDay();
+}, {
+  scheduled: true,
+  timezone: "America/Sao_Paulo"
+});
 
 router.get("/", (req, res) => {
   res.status(200).send("Server up");
