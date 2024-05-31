@@ -39,7 +39,7 @@ cron.schedule('0 6 * * *', () => {
 });
 
 router.get("/", (req, res) => {
-  res.status(200).send("Server up");
+  res.status(200).send("Service On! Deploy 1.0");
 });
 
 

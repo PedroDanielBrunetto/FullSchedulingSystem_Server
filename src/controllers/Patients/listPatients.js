@@ -6,7 +6,7 @@ const ListPatients = async (req, res) => {
 
     await pool.query(query, async (err, result) => {
       if (err) {
-        res.status(400).json({ Message: error });
+        res.status(400).json({ Message: err.message }); // Corrigido de 'error' para 'err'
         return;
       }
       if (result.length === 0) {
