@@ -54,6 +54,8 @@ const ListAndViewsInDay = async () => {
         ${smsApi}&usuario=${smsUser}&senha=${smsPassword}&celular=${cel_patient}&mensagem=${mensagemFinal}&data=${envioDataHora}
       `.trim();
 
+      console.log('Celular: '+cel_patient+' \nAPI: '+apiURL);
+
       try {
         const response = await axios.get(apiURL);
         results.push({
