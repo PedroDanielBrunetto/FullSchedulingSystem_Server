@@ -35,7 +35,7 @@ const ListAndViewsInDay = async () => {
       const { initial, cel_patient, Mensagem_enviada, sending_interval } =
         appointment;
 
-      const consultaData = new Date(initial);
+      const consultaData = moment(initial);
       const dataFormatada = consultaData.format("DD/MM/YYYY");
       const horarioFormatado = consultaData.clone().format("HH:mm");
       const horarioFormatadoEnvio = consultaData
