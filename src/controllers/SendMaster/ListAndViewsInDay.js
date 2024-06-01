@@ -6,7 +6,6 @@ const ListAndViewsInDay = async () => {
   try {
     // Data atual no fuso horário de São Paulo (Brasília)
     const today = moment.tz("America/Sao_Paulo").format("YYYY-MM-DD");
-    console.log(`Data atual: ${today}`);
 
     const query = `
       SELECT a.id_scheduling, a.initial, p.cel_patient, s.Mensagem_enviada, s.sending_interval
@@ -36,7 +35,7 @@ const ListAndViewsInDay = async () => {
       const { initial, cel_patient, Mensagem_enviada, sending_interval } =
         appointment;
 
-      const consultaData = moment(initial).tz("America/Sao_Paulo");
+      const consultaData = new Date(initial);
       const dataFormatada = consultaData.format("DD/MM/YYYY");
       const horarioFormatado = consultaData.clone().format("HH:mm");
       const horarioFormatadoEnvio = consultaData
@@ -54,8 +53,6 @@ const ListAndViewsInDay = async () => {
       const apiURL = `
         ${smsApi}&usuario=${smsUser}&senha=${smsPassword}&celular=${cel_patient}&mensagem=${mensagemFinal}&data=${envioDataHora}
       `.trim();
-
-      console.log(`Enviando SMS para ${cel_patient}: ${apiURL}`);
 
       try {
         const response = await axios.get(apiURL);
