@@ -56,7 +56,7 @@ router.get("/trigger-sms-job", async (req, res) => {
 
 // Rota principal
 router.get("/", (req, res) => {
-  res.status(200).send("Service On! Deploy 2.0");
+  res.status(200).send("Service On! Deploy 3.0");
 });
 
 module.exports = router;
