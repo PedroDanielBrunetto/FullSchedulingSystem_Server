@@ -29,6 +29,18 @@ const {
 } = require("./controllers/Schedule/CancelAppointment.js");
 router.delete("/cancel-appointment", CancelAppointment);
 
+// Schedule Not Register
+const {
+  NotRegisteredAppointment,
+} = require("./controllers/ScheduleNotRegister/NotRegisteredAppointment.js");
+router.post("/not-registered-appointment", NotRegisteredAppointment);
+
+//ListAllAppointments
+const {
+  getAppointmentsByDay,
+} = require("./controllers/ListAllAppointments/index.js");
+router.get("/list-appointments", getAppointmentsByDay);
+
 // SendMaster
 const { SendSms } = require("./controllers/SendMaster/SendSms.js");
 router.get("/Send-sms-Iagente", SendSms);
