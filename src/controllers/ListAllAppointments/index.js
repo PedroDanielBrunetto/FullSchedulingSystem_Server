@@ -1,14 +1,8 @@
 const pool = require("../../Infra/mysql2");
 
-// Função para converter datas
-const formatDateForSQL = (dateString) => {
-  const [day, month, year] = dateString.split("/");
-  return `${year}-${month}-${day}`;
-};
-
 const getAppointmentsByDay = async (req, res) => {
   try {
-    const { date } = req.query;
+    const { date } = req.params;
 
     if (!date) {
       return res.status(400).json({
@@ -17,14 +11,12 @@ const getAppointmentsByDay = async (req, res) => {
       });
     }
 
-    const formattedDate = formatDateForSQL(date);
-
     const query = `
       SELECT * FROM AllAppointments
       WHERE DATE(initial) = ?;
     `;
 
-    pool.query(query, [formattedDate], (error, results) => {
+    pool.query(query, [date], (error, results) => {
       if (error) {
         throw error;
       }

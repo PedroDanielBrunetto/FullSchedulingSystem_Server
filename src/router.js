@@ -39,7 +39,7 @@ router.post("/not-registered-appointment", NotRegisteredAppointment);
 const {
   getAppointmentsByDay,
 } = require("./controllers/ListAllAppointments/index.js");
-router.get("/list-appointments", getAppointmentsByDay);
+router.get("/list-appointments/:date", getAppointmentsByDay);
 
 // SendMaster
 const { SendSms } = require("./controllers/SendMaster/SendSms.js");
