@@ -12,7 +12,13 @@ const getAppointmentsByDay = async (req, res) => {
     }
 
     const query = `
-      SELECT * FROM AllAppointments
+      SELECT 
+        id, 
+        DATE_FORMAT(initial, '%H:%i') AS initial, 
+        DATE_FORMAT(final, '%H:%i') AS final, 
+        name, 
+        message 
+      FROM AllAppointments
       WHERE DATE(initial) >= ?;
     `;
 
