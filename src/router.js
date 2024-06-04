@@ -66,9 +66,27 @@ router.get("/trigger-sms-job", async (req, res) => {
   }
 });
 
+//Settings
+const { getSettings } = require("./controllers/Settings/GetSettings/index.js");
+router.get("/get-settings", getSettings);
+
+// Update Settings
+const {
+  IntervalSendingAPI,
+} = require("./controllers/Settings/IntervalSendingAPI.js");
+router.put("/update-intervalAPI", IntervalSendingAPI);
+
+const {
+  UpdateMessageSms,
+} = require("./controllers/Settings/UpdateMessageSms.js");
+router.put("/update-message-sms", UpdateMessageSms);
+
+const { UpdatePassword } = require("./controllers/Settings/UpdatePassword.js");
+router.put("/update-password", UpdatePassword);
+
 // Rota principal
 router.get("/", (req, res) => {
-  res.status(200).send("Service On! Deploy 3.0");
+  res.status(200).send("Service On! Deploy 4.0");
 });
 
 module.exports = router;

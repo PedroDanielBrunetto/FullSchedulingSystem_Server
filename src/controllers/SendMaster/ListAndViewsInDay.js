@@ -8,14 +8,32 @@ const ListAndViewsInDay = async () => {
     const today = moment.tz("America/Sao_Paulo").format("YYYY-MM-DD");
 
     const query = `
-      SELECT a.id_scheduling, a.initial, p.cel_patient, s.Mensagem_enviada, s.sending_interval
-      FROM agenda a
-      JOIN patient p ON a.id_patient = p.id_patient
+      SELECT 
+          a.id_scheduling,
+          a.initial,
+          COALESCE(p.cel_patient, n.cel_patient) AS cel_patient,
+          s.Mensagem_enviada,
+          s.sending_interval
+      FROM 
+          (
+              SELECT id_scheduling, initial, id_patient, NULL AS not_registered
+              FROM agenda
+              WHERE DATE(initial) = ?
+              
+              UNION ALL
+              
+              SELECT id, initial, NULL AS id_patient, cel_patient AS not_registered
+              FROM agendaNotRegistered
+              WHERE DATE(initial) = ?
+          ) a
+      LEFT JOIN patient p ON a.id_patient = p.id_patient
+      LEFT JOIN agendaNotRegistered n ON a.not_registered = n.id
       JOIN settings s ON s.id = 1
-      WHERE DATE(a.initial) = ?
+      WHERE 
+          p.cel_patient IS NOT NULL OR n.cel_patient IS NOT NULL
     `;
 
-    const [rows] = await pool.query(query, [today]);
+    const [rows] = await pool.query(query, [today, today]);
 
     if (rows.length === 0) {
       return {
@@ -54,7 +72,7 @@ const ListAndViewsInDay = async () => {
         ${smsApi}&usuario=${smsUser}&senha=${smsPassword}&celular=${cel_patient}&mensagem=${mensagemFinal}&data=${envioDataHora}
       `.trim();
 
-      console.log('Celular: '+cel_patient+' \nAPI: '+apiURL);
+      console.log("Celular: " + cel_patient + " \nAPI: " + apiURL);
 
       try {
         const response = await axios.get(apiURL);
