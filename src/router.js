@@ -84,6 +84,12 @@ router.put("/update-message-sms", UpdateMessageSms);
 const { UpdatePassword } = require("./controllers/Settings/UpdatePassword.js");
 router.put("/update-password", UpdatePassword);
 
+// SMS Credits
+const {
+  BalanceInquirySms,
+} = require("./controllers/Settings/GetSettings/BalanceInquirySms.js");
+router.get("/verify-sms-credits", BalanceInquirySms);
+
 // Rota principal
 router.get("/", (req, res) => {
   res.status(200).send("Service On! Deploy 4.0");
