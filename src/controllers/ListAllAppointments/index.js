@@ -13,7 +13,8 @@ const getAppointmentsByDay = async (req, res) => {
 
     const query = `
       SELECT 
-        id, 
+        id,
+        DATE_FORMAT(initial, '%Y-%m-%d') AS date_appointment, 
         DATE_FORMAT(initial, '%H:%i') AS initial, 
         DATE_FORMAT(final, '%H:%i') AS final, 
         name, 
