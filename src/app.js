@@ -17,7 +17,7 @@ pool.getConnection((err, connection) => {
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://www.martinezodontologia.com/"],
+    origin: ["http://localhost:5173", "https://www.martinezodontologia.com"],
     credentials: true,
   })
 );

@@ -18,7 +18,8 @@ const getAppointmentsByDay = async (req, res) => {
         DATE_FORMAT(initial, '%H:%i') AS initial, 
         DATE_FORMAT(final, '%H:%i') AS final, 
         name, 
-        message 
+        message,
+        identify 
       FROM AllAppointments
       WHERE DATE(initial) >= ?;
     `;

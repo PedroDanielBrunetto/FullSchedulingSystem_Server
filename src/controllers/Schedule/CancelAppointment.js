@@ -2,18 +2,26 @@ const pool = require("../../Infra/mysql2.js").promise();
 
 const CancelAppointment = async (req, res) => {
   try {
-    const { id_scheduling } = req.body;
+    const { id_scheduling, identify } = req.body;
 
-    if (!id_scheduling) {
+    if (!id_scheduling || !identify) {
       return res.status(400).json({
         success: false,
         message: "O ID do agendamento é obrigatório.",
       });
     }
 
-    const deleteAppointmentQuery = `
-      DELETE FROM agenda WHERE id_scheduling = ?;
-    `;
+    let deleteAppointmentQuery = null;
+
+    if (identify === 1) {
+      deleteAppointmentQuery = `
+        DELETE FROM agenda WHERE id_scheduling = ?;
+      `;
+    } else {
+      deleteAppointmentQuery = `
+        DELETE FROM agendaNotRegistered WHERE id = ?;
+      `;
+    }
 
     await pool.query(deleteAppointmentQuery, [id_scheduling]);
 
