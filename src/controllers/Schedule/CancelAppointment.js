@@ -4,7 +4,7 @@ const CancelAppointment = async (req, res) => {
   try {
     const { id_scheduling, identify } = req.body;
 
-    if (!id_scheduling || !identify) {
+    if (!id_scheduling) {
       return res.status(400).json({
         success: false,
         message: "O ID do agendamento é obrigatório.",
