@@ -18,8 +18,8 @@ const NotRegisteredAppointment = async (req, res) => {
       });
     }
 
-    if (!message){
-      message = "Não há observações."
+    if (!message) {
+      message = "Não há observações.";
     }
 
     const formattedDateInitial = formatDate(dateInitial);
@@ -43,13 +43,14 @@ const NotRegisteredAppointment = async (req, res) => {
          OR (final = ?);
     `;
 
-
     pool.query(
       checkConsultBetween,
       [
         formattedDateInitial,
         formattedDateInitial,
         formattedDateFinal,
+        formattedDateFinal,
+        formattedDateInitial,
         formattedDateFinal,
         formattedDateInitial,
         formattedDateFinal,
@@ -73,6 +74,8 @@ const NotRegisteredAppointment = async (req, res) => {
               formattedDateInitial,
               formattedDateInitial,
               formattedDateFinal,
+              formattedDateFinal,
+              formattedDateInitial,
               formattedDateFinal,
               formattedDateInitial,
               formattedDateFinal,
