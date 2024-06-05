@@ -20,6 +20,10 @@ const RegisterPatients = async (req, res) => {
       VALUES (?, ?, ?, ?, ?, ?, ?)
     `;
 
+    if (!about){
+      about = "Não há observações."
+    }
+
     await pool.query(insertPatientQuery, [
       firstName,
       secondName,

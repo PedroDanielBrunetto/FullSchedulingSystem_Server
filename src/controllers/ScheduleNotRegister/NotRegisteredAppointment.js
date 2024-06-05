@@ -18,6 +18,10 @@ const NotRegisteredAppointment = async (req, res) => {
       });
     }
 
+    if (!message){
+      message = "Não há observações."
+    }
+
     const formattedDateInitial = formatDate(dateInitial);
     const formattedDateFinal = formatDate(dateFinal);
 
