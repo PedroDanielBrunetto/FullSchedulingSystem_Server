@@ -2,7 +2,7 @@ const pool = require("../../Infra/mysql.js");
 
 const RegisterPatients = async (req, res) => {
   try {
-    const { firstName, secondName, cpf, cep, email, cel, about } = req.body;
+    let { firstName, secondName, cpf, cep, email, cel, about } = req.body;
 
     if (!firstName || !secondName || !cpf || !cep) {
       return res.status(400).json({

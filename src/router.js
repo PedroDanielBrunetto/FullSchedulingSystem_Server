@@ -92,7 +92,7 @@ router.get("/verify-sms-credits", BalanceInquirySms);
 
 // Rota principal
 router.get("/", (req, res) => {
-  res.status(200).send("Service On! Deploy 4.0");
+  res.status(200).send("Service On! Deploy 5.0");
 });
 
 module.exports = router;

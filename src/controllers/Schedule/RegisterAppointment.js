@@ -9,7 +9,7 @@ const formatDate = (dateString) => {
 
 const RegisterAppointment = async (req, res) => {
   try {
-    const { cpf, dateInitial, dateFinal, message } = req.body;
+    let { cpf, dateInitial, dateFinal, message } = req.body;
 
     if (!cpf || !dateInitial || !dateFinal) {
       return res.status(400).json({

@@ -9,7 +9,7 @@ const formatDate = (dateString) => {
 
 const NotRegisteredAppointment = async (req, res) => {
   try {
-    const { name, cel, dateInitial, dateFinal, message } = req.body;
+    let { name, cel, dateInitial, dateFinal, message } = req.body;
 
     if (!name || !dateInitial || !dateFinal) {
       return res.status(400).json({
