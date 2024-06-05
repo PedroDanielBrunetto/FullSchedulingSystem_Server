@@ -27,75 +27,99 @@ const RegisterAppointment = async (req, res) => {
 
     const checkConsultBetween = `
       SELECT * FROM agenda 
-      WHERE (initial <= ? AND final >= ?) OR (initial <= ? AND final >= ?) OR (initial >= ? AND final <= ?);
+      WHERE (initial < ? AND final > ?) OR 
+            (initial < ? AND final > ?) OR 
+            (initial >= ? AND final <= ?) OR 
+            (initial = ? OR final = ?);
     `;
 
-    pool.query(
-      checkConsultBetween,
-      [
-        formattedDateInitial,
-        formattedDateInitial,
-        formattedDateFinal,
-        formattedDateFinal,
-        formattedDateInitial,
-        formattedDateFinal,
-      ],
-      (error, consultExistResults) => {
-        if (error) {
-          throw error;
-        }
+    const checkConsultBetweenNotRegister = `
+      SELECT * FROM agendaNotRegistered 
+      WHERE (initial < ? AND final > ?) OR 
+            (initial < ? AND final > ?) OR 
+            (initial >= ? AND final <= ?) OR 
+            (initial = ? OR final = ?);
+    `;
 
-        const consultExist = consultExistResults;
+    const queryParams = [
+      formattedDateInitial,
+      formattedDateInitial,
+      formattedDateFinal,
+      formattedDateFinal,
+      formattedDateInitial,
+      formattedDateFinal,
+      formattedDateInitial,
+      formattedDateFinal,
+      formattedDateInitial,
+      formattedDateFinal
+    ];
 
-        if (consultExist.length > 0) {
-          return res.status(400).json({
-            success: false,
-            message: "Já existe uma consulta agendada para esse horário.",
-          });
-        }
+    pool.query(checkConsultBetween, queryParams, (error, consultExistResults) => {
+      if (error) {
+        throw error;
+      }
 
-        pool.query(checkExistingPatient, [cpf], (error, patientResults) => {
+      if (consultExistResults.length > 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Já existe uma consulta agendada para esse horário.",
+        });
+      } else {
+        pool.query(checkConsultBetweenNotRegister, queryParams, (error, consultExistResultsUnregister) => {
           if (error) {
             throw error;
           }
 
-          const patient = patientResults;
-
-          if (patient.length === 0) {
-            return res.status(404).json({
+          if (consultExistResultsUnregister.length > 0) {
+            return res.status(400).json({
               success: false,
-              message: "Paciente não encontrado.",
+              message: "Já existe uma consulta agendada para esse horário.",
             });
-          }
-
-          const insertAppointment = `
-          INSERT INTO agenda (display_name, initial, final, message, id_patient)
-          VALUES (?, ?, ?, ?, ?);
-        `;
-
-          pool.query(
-            insertAppointment,
-            [
-              `${patient[0].first_name} ${patient[0].second_name}`,
-              formattedDateInitial,
-              formattedDateFinal,
-              message,
-              patient[0].id_patient,
-            ],
-            (error, result) => {
+          } else {
+            pool.query(checkExistingPatient, [cpf], (error, patientResults) => {
               if (error) {
                 throw error;
               }
 
-              return res.status(201).json({
-                success: true,
-                message: "Consulta agendada com sucesso.",
-              });
-            }
-          );
+              if (patientResults.length === 0) {
+                return res.status(400).json({
+                  success: false,
+                  message: "Paciente não encontrado.",
+                });
+              }
+
+              const patient = patientResults[0];
+
+              const insertAppointment = `
+                INSERT INTO agenda (display_name, initial, final, message, id_patient)
+                VALUES (?, ?, ?, ?, ?);
+              `;
+
+              pool.query(
+                insertAppointment,
+                [
+                  `${patient.first_name} ${patient.second_name}`,
+                  formattedDateInitial,
+                  formattedDateFinal,
+                  message,
+                  patient.id_patient,
+                ],
+                (error, result) => {
+                  if (error) {
+                    throw error;
+                  }
+
+                  return res.status(201).json({
+                    success: true,
+                    message: "Consulta agendada com sucesso.",
+                  });
+                }
+              );
+            });
+          }
         });
       }
-    );
+    });
   } catch (error) {
     console.error("Erro ao registrar paciente:", error);
     return res.status(500).json({

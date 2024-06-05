@@ -23,12 +23,20 @@ const NotRegisteredAppointment = async (req, res) => {
 
     const checkConsultBetween = `
       SELECT * FROM agenda 
-      WHERE (initial <= ? AND final >= ?) OR (initial <= ? AND final >= ?) OR (initial >= ? AND final <= ?);
+      WHERE (initial < ? AND final > ?) OR 
+            (initial < ? AND final > ?) OR 
+            (initial >= ? AND final <= ?) OR 
+            (initial = ? OR final = ?) OR 
+            (initial = ? OR final = ?);
     `;
 
     const checkConsultBetweenNotRegister = `
       SELECT * FROM agendaNotRegistered 
-      WHERE (initial <= ? AND final >= ?) OR (initial <= ? AND final >= ?) OR (initial >= ? AND final <= ?);
+      WHERE (initial < ? AND final > ?) OR 
+            (initial < ? AND final > ?) OR 
+            (initial >= ? AND final <= ?) OR 
+            (initial = ? OR final = ?) OR 
+            (initial = ? OR final = ?);
     `;
 
     pool.query(
