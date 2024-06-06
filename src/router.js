@@ -90,6 +90,17 @@ const {
 } = require("./controllers/Settings/GetSettings/BalanceInquirySms.js");
 router.get("/verify-sms-credits", BalanceInquirySms);
 
+// Dashboard
+const {
+  appointmentsAvaragePerDay
+} = require("./controllers/Dashboard/appointmentsAvaragePerDay.js");
+router.get("/dashboard-appointmentsPerDay", appointmentsAvaragePerDay);
+
+const {
+  registerPatientsPerMonth
+} = require("./controllers/Dashboard/registerPatientsPerMonth.js");
+router.get("/dashboard-patientsPerMonth", registerPatientsPerMonth);
+
 // Rota principal
 router.get("/", (req, res) => {
   res.status(200).send("Service On! Deploy 5.0");
